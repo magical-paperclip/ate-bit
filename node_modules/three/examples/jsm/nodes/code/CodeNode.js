@@ -12,13 +12,13 @@ class CodeNode extends Node {
 		this.code = code;
 		this.language = language;
 
-		this.includes = includes;
+		this._includes = includes;
 
 	}
 
 	setIncludes( includes ) {
 
-		this.includes = includes;
+		this._includes = includes;
 
 		return this;
 
@@ -26,7 +26,7 @@ class CodeNode extends Node {
 
 	getIncludes( /*builder*/ ) {
 
-		return this.includes;
+		return this._includes;
 
 	}
 
@@ -70,9 +70,6 @@ class CodeNode extends Node {
 export default CodeNode;
 
 export const code = nodeProxy( CodeNode );
-
 export const js = ( src, includes ) => code( src, includes, 'js' );
-export const wgsl = ( src, includes ) => code( src, includes, 'wgsl' );
-export const glsl = ( src, includes ) => code( src, includes, 'glsl' );
 
-addNodeClass( 'CodeNode', CodeNode );
+addNodeClass( CodeNode );

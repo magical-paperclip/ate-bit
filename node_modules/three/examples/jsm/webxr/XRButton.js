@@ -1,6 +1,6 @@
 class XRButton {
 
-	static createButton( renderer, sessionInit = {} ) {
+	static createButton( renderer ) {
 
 		const button = document.createElement( 'button' );
 
@@ -40,17 +40,6 @@ class XRButton {
 
 			button.textContent = 'START XR';
 
-			const sessionOptions = {
-				...sessionInit,
-				optionalFeatures: [
-					'local-floor',
-					'bounded-floor',
-					'hand-tracking',
-					'layers',
-					...( sessionInit.optionalFeatures || [] )
-				],
-			};
-
 			button.onmouseenter = function () {
 
 				button.style.opacity = '1.0';
@@ -67,30 +56,25 @@ class XRButton {
 
 				if ( currentSession === null ) {
 
-					navigator.xr.requestSession( mode, sessionOptions )
+					const sessionInit = {
+						optionalFeatures: [
+							'local-floor',
+							'bounded-floor',
+							'hand-tracking',
+							'layers'
+						]
+					};
+
+					navigator.xr.requestSession( mode, sessionInit )
 						.then( onSessionStarted );
 
 				} else {
 
 					currentSession.end();
 
-					if ( navigator.xr.offerSession !== undefined ) {
-
-						navigator.xr.offerSession( mode, sessionOptions )
-							.then( onSessionStarted );
-
-					}
-
 				}
 
 			};
-
-			if ( navigator.xr.offerSession !== undefined ) {
-
-				navigator.xr.offerSession( mode, sessionOptions )
-					.then( onSessionStarted );
-
-			}
 
 		}
 

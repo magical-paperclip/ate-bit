@@ -267,15 +267,10 @@ function html2canvas( element ) {
 			// Canvas element
 			if ( element.style.display === 'none' ) return;
 
-			const rect = element.getBoundingClientRect();
-
-			x = rect.left - offset.left - 0.5;
-			y = rect.top - offset.top - 0.5;
-
-		        context.save();
+			context.save();
 			const dpr = window.devicePixelRatio;
 			context.scale( 1 / dpr, 1 / dpr );
-			context.drawImage( element, x, y );
+			context.drawImage( element, 0, 0 );
 			context.restore();
 
 		} else if ( element instanceof HTMLImageElement ) {
@@ -505,8 +500,6 @@ function html2canvas( element ) {
 	const clipper = new Clipper( context );
 
 	// console.time( 'drawElement' );
-
-	context.clearRect( 0, 0, canvas.width, canvas.height );
 
 	drawElement( element );
 

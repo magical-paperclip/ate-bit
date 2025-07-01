@@ -76,6 +76,12 @@ class NRRDLoader extends Loader {
 
 		function scan( type, chunks ) {
 
+			if ( chunks === undefined || chunks === null ) {
+
+				chunks = 1;
+
+			}
+
 			let _chunkSize = 1;
 			let _array_type = Uint8Array;
 
@@ -129,6 +135,13 @@ class NRRDLoader extends Loader {
 
 				// we need to flip here since the format doesn't match the native endianness
 				_bytes = flipEndianness( _bytes, _chunkSize );
+
+			}
+
+			if ( chunks == 1 ) {
+
+				// if only one chunk was requested, just return one value
+				return _bytes[ 0 ];
 
 			}
 
@@ -460,10 +473,10 @@ class NRRDLoader extends Loader {
 
 		volume.inverseMatrix = new Matrix4();
 		volume.inverseMatrix.copy( volume.matrix ).invert();
-
+		
 		volume.RASDimensions = [
-			Math.floor( volume.xLength * spacingX ),
-			Math.floor( volume.yLength * spacingY ),
+			Math.floor( volume.xLength * spacingX ), 
+			Math.floor( volume.yLength * spacingY ), 
 			Math.floor( volume.zLength * spacingZ )
 		];
 

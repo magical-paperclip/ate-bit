@@ -6,7 +6,7 @@ class NodeUniform {
 
 		this.name = name;
 		this.type = type;
-		this.node = node.getSelf();
+		this.node = node;
 		this.needsUpdate = needsUpdate;
 
 	}
@@ -20,18 +20,6 @@ class NodeUniform {
 	set value( val ) {
 
 		this.node.value = val;
-
-	}
-
-	get id() {
-
-		return this.node.id;
-
-	}
-
-	get groupNode() {
-
-		return this.node.groupNode;
 
 	}
 

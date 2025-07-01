@@ -42,6 +42,12 @@ import { TGALoader } from '../loaders/TGALoader.js';
 
 class ColladaLoader extends Loader {
 
+	constructor( manager ) {
+
+		super( manager );
+
+	}
+
 	load( url, onLoad, onProgress, onError ) {
 
 		const scope = this;
@@ -3704,10 +3710,7 @@ class ColladaLoader extends Loader {
 
 		}
 
-		const fallbackMaterial = new MeshBasicMaterial( {
-			name: Loader.DEFAULT_MATERIAL_NAME,
-			color: 0xff00ff
-		} );
+		const fallbackMaterial = new MeshBasicMaterial( { color: 0xff00ff } );
 
 		function resolveMaterialBinding( keys, instanceMaterials ) {
 

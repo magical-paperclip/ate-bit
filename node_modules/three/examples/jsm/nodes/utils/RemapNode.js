@@ -1,9 +1,9 @@
 import Node, { addNodeClass } from '../core/Node.js';
-import { float, addNodeElement, nodeProxy } from '../shadernode/ShaderNode.js';
+import { addNodeElement, nodeProxy } from '../shadernode/ShaderNode.js';
 
 class RemapNode extends Node {
 
-	constructor( node, inLowNode, inHighNode, outLowNode = float( 0 ), outHighNode = float( 1 ) ) {
+	constructor( node, inLowNode, inHighNode, outLowNode, outHighNode ) {
 
 		super();
 
@@ -17,7 +17,7 @@ class RemapNode extends Node {
 
 	}
 
-	setup() {
+	construct() {
 
 		const { node, inLowNode, inHighNode, outLowNode, outHighNode, doClamp } = this;
 
@@ -39,4 +39,4 @@ export const remapClamp = nodeProxy( RemapNode );
 addNodeElement( 'remap', remap );
 addNodeElement( 'remapClamp', remapClamp );
 
-addNodeClass( 'RemapNode', RemapNode );
+addNodeClass( RemapNode );

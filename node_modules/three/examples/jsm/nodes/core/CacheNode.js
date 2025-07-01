@@ -24,9 +24,8 @@ class CacheNode extends Node {
 	build( builder, ...params ) {
 
 		const previousCache = builder.getCache();
-		const cache = this.cache || builder.globalCache;
 
-		builder.setCache( cache );
+		builder.setCache( this.cache );
 
 		const data = this.node.build( builder, ...params );
 
@@ -41,9 +40,7 @@ class CacheNode extends Node {
 export default CacheNode;
 
 export const cache = nodeProxy( CacheNode );
-export const globalCache = ( node ) => cache( node, null );
 
 addNodeElement( 'cache', cache );
-addNodeElement( 'globalCache', globalCache );
 
-addNodeClass( 'CacheNode', CacheNode );
+addNodeClass( CacheNode );
