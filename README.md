@@ -4,7 +4,7 @@ quick experiment with a web terminal and snake game
 
 ## what it is
 
-messing around with web terminals, threw in a snake game bc why not
+messing around with web terminals
 
 ## how to run
 
@@ -30,6 +30,6 @@ that's pretty much it lol
 
 ## todo maybe
 
-- add more games if i feel like it
+- add more games 
 - make it less janky
-- probably won't tho
+
