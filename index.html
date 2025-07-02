@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ate-bit - terminal experiment</title>
-    <link rel="stylesheet" href="style.css">
+    <title>ate-bit v0.1.0</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="terminal-container">
@@ -17,16 +17,15 @@
                 <div class="btn minimize"></div>
                 <div class="btn maximize"></div>
             </div>
-            <div class="terminal-title">ate-bit v0.1.0 - quick experiment</div>
+            <div class="terminal-title">ate-bit v0.1.0 - retro terminal</div>
         </div>
-        
         <div class="terminal-content">
             <div id="terminal-output"></div>
             <div class="terminal-input-line">
-                <span class="prompt">visitor@gamehub:~$ </span>
+                <span class="prompt" id="terminal-prompt">guest@ate-bit:~$ </span>
                 <div class="input-container">
-                    <input type="text" id="terminal-input" autocomplete="off" spellcheck="false" autofocus aria-label="Terminal command input">
-                    <span class="cursor">█</span>
+                    <input type="text" id="terminal-input" autocomplete="off" aria-label="Terminal input">
+                    <span class="cursor" id="cursor">_</span>
                 </div>
             </div>
         </div>
@@ -39,52 +38,61 @@
         </div>
         
         <div class="panel-section">
-            <h3>🎮 available stuff</h3>
+            <h3>Quick Commands</h3>
             <div class="command-grid">
-                <div class="cmd-item">
-                    <code>snake</code>
-                    <span>super snake 2.0 🐍</span>
+                <div class="cmd-item" onclick="document.getElementById('terminal-input').value='games'; document.getElementById('terminal-input').focus();">
+                    <code>games</code><br>
+                    <span>play retro games</span>
+                </div>
+                <div class="cmd-item" onclick="document.getElementById('terminal-input').value='theme'; document.getElementById('terminal-input').focus();">
+                    <code>theme</code><br><span>change colors</span>
+                </div>
+                <div class="cmd-item" onclick="document.getElementById('terminal-input').value='help'; document.getElementById('terminal-input').focus();">
+                    <code>help</code><br>
+                    <span>show commands</span>
                 </div>
             </div>
         </div>
-        
-        <div class="panel-section">
-            <h3>📟 commands</h3>
-            <div class="command-grid">
-                <div class="cmd-item">
-                    <code>help</code>
-                    <span>show commands</span>
+
+                <div class="panel-section">
+            <div class="theme-selector">
+                <div class="theme-preview theme-matrix" data-theme="matrix">
+                    <div class="preview-bg"></div>
+                    <div class="preview-text">$</div>
                 </div>
-                <div class="cmd-item">
-                    <code>clear</code>
-                    <span>wipe screen</span>
+                <div class="theme-preview theme-cyberpunk" data-theme="cyberpunk">
+                    <div class="preview-bg"></div>
+                    <div class="preview-text">></div>
                 </div>
-                <div class="cmd-item">
-                    <code>about</code>
-                    <span>project info</span>
+                <div class="theme-preview theme-minimalist" data-theme="minimalist">
+                    <div class="preview-bg"></div>
+                    <div class="preview-text">#</div>
                 </div>
-                <div class="cmd-item">
-                    <code>hack &lt;name&gt;</code>
-                    <span>hack someone</span>
+                <div class="theme-preview theme-neon" data-theme="neon">
+                    <div class="preview-bg"></div>
+                    <div class="preview-text">~</div>
+                </div>
+                <div class="theme-preview theme-noir" data-theme="noir">
+                    <div class="preview-bg"></div>
+                    <div class="preview-text">%</div>
                 </div>
             </div>
         </div>
 
         <div class="panel-section">
-            <h3>⚡ quick start</h3>
             <div class="quick-tips">
-                <p>type <code>snake</code> for enhanced snake</p>
-                <p>look for ◉ power-ups and ★ bonuses!</p>
-                <p>type <code>help</code> for all commands</p>
+                <p>Type <code>ls</code> for unix commands</p>
+                <p>Use <code>↑/↓</code> for command history</p>
+                <p>Press <code>Tab</code> for autocomplete</p>
+                <p>Try the <code>konami</code> code...</p>
             </div>
         </div>
 
         <div class="panel-footer">
-            <p>terminal experiment</p>
-            <p>just messing around</p>
+            <p>a retro terminal experiment</p>
         </div>
     </div>
 
-    <script type="module" src="main.js"></script>
+    <script src="main.js"></script>
 </body>
 </html> 
