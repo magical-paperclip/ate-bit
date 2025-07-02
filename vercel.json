@@ -1,13 +1,14 @@
 {
   "version": 2,
+  "name": "ate-bit",
   "public": true,
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "cleanUrls": true,
-  "routes": [
-    { "src": "^/assets/(.*)$", "dest": "/assets/$1" },
-    { "src": "^/style\\.css$", "dest": "/style.css" },
-    { "src": "^/main\\.js$", "dest": "/main.js" },
-    { "src": "/(.*)", "dest": "/index.html" }
+  "rewrites": [
+    { "source": "/assets/:path*", "destination": "/assets/:path*" },
+    { "source": "/style.css", "destination": "/style.css" },
+    { "source": "/main.js", "destination": "/main.js" },
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 } 
