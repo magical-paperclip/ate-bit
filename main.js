@@ -135,13 +135,11 @@ export class Term {
             
             if (e.key === 'Enter') {
                 const cmd = this.i.value.trim()
-                if (cmd) {
-                    if (this.noob) {
-                        this.handleSetupInput(cmd)
-                    } else {
-                        this.addLine(`$ ${cmd}`, 'user-input')
-                        this.runCommand(cmd)
-                    }
+                if (this.noob) {
+                    this.handleSetupInput(cmd)
+                } else if (cmd) {
+                    this.addLine(`$ ${cmd}`, 'user-input')
+                    this.runCommand(cmd)
                 }
                 this.i.value = ''
                 this.updateCursorPosition()
@@ -155,7 +153,6 @@ export class Term {
         this.initTheme()
         this.updateCursorPosition()
         
-       
         setTimeout(() => this.i.focus(), 0)
     }
     
