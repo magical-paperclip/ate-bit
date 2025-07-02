@@ -24,66 +24,65 @@
             <div id="terminal-output"></div>
             <div class="terminal-input-line">
                 <span class="prompt">visitor@gamehub:~$ </span>
-                <input type="text" id="terminal-input" autocomplete="off" spellcheck="false" autofocus aria-label="Terminal command input">
-                <span class="cursor">|</span>
+                <div class="input-container">
+                    <input type="text" id="terminal-input" autocomplete="off" spellcheck="false" autofocus aria-label="Terminal command input">
+                    <span class="cursor">█</span>
+                </div>
             </div>
         </div>
     </div>
 
     <div class="info-panel">
-        <h3>🎮 Game Collection (20+ Games)</h3>
-        <ul>
-            <li><code>snake</code> - Classic Snake</li>
-            <li><code>pong</code> - ASCII Pong</li>
-            <li><code>tetris</code> - Block Puzzle 🔒</li>
-            <li><code>spaceship</code> - Space Adventure 🔒</li>
-            <li><code>maze</code> - Maze Runner 🔒</li>
-            <li><code>rogue</code> - Dungeon Crawler 🔒</li>
-            <li><code>breakout</code> - Brick Breaker 🔒</li>
-            <li><code>asteroids</code> - Space Shooter 🔒</li>
-            <li><code>racing</code> - Racing Game 🔒</li>
-            <li><code>rpg</code> - Mini RPG 🔒</li>
-            <li><code>story</code> - Interactive Story 🔒</li>
-            <li><code>mystery</code> - Secret Game 🔒</li>
-        </ul>
+        <div class="panel-header">
+            <h2>ate-bit</h2>
+            <span class="version">v0.1.0</span>
+        </div>
         
-        <h3>📊 Progress System</h3>
-        <ul>
-            <li><code>profile</code> - Player profile & rank</li>
-            <li><code>stats</code> - Detailed statistics</li>
-            <li><code>achievements</code> - 14 achievements</li>
-            <li><code>highscores</code> - Best scores</li>
-            <li><code>save</code> - Save progress</li>
-            <li><code>load</code> - Load progress</li>
-        </ul>
-
-        <h3>🎪 Fun Commands</h3>
-        <ul>
-            <li><code>matrix</code> - Digital rain effect</li>
-            <li><code>cowsay [text]</code> - ASCII cow</li>
-            <li><code>fortune</code> - Random wisdom</li>
-            <li><code>neofetch</code> - System info</li>
-            <li><code>hack</code> - Hacking simulator 🔒</li>
-            <li><code>mystery</code> - Mystery command 🔒</li>
-        </ul>
-
-        <h3>📂 System Commands</h3>
-        <ul>
-            <li><code>help</code> - All commands</li>
-            <li><code>games</code> - Game list</li>
-            <li><code>clear</code> - Clear screen</li>
-            <li><code>cat [file]</code> - Read files</li>
-            <li><code>ls</code> - List games</li>
-            <li><code>whoami</code> - Current user</li>
-        </ul>
-
-        <h3>🔓 Unlock System</h3>
-        <p>Play games and use commands to gain XP and level up! Each level unlocks new games and features.</p>
+        <div class="panel-section">
+            <h3>🎮 available stuff</h3>
+            <div class="command-grid">
+                <div class="cmd-item">
+                    <code>snake</code>
+                    <span>super snake 2.0 🐍</span>
+                </div>
+            </div>
+        </div>
         
-        <p><strong>Current:</strong> Level 1 Novice<br>
-        <strong>Goal:</strong> Reach Level 25 Legend</p>
-        
-        <p>🏆 <strong>15+ Hours of Content!</strong></p>
+        <div class="panel-section">
+            <h3>📟 commands</h3>
+            <div class="command-grid">
+                <div class="cmd-item">
+                    <code>help</code>
+                    <span>show commands</span>
+                </div>
+                <div class="cmd-item">
+                    <code>clear</code>
+                    <span>wipe screen</span>
+                </div>
+                <div class="cmd-item">
+                    <code>about</code>
+                    <span>project info</span>
+                </div>
+                <div class="cmd-item">
+                    <code>hack &lt;name&gt;</code>
+                    <span>hack someone</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-section">
+            <h3>⚡ quick start</h3>
+            <div class="quick-tips">
+                <p>type <code>snake</code> for enhanced snake</p>
+                <p>look for ◉ power-ups and ★ bonuses!</p>
+                <p>type <code>help</code> for all commands</p>
+            </div>
+        </div>
+
+        <div class="panel-footer">
+            <p>terminal experiment</p>
+            <p>just messing around</p>
+        </div>
     </div>
 
     <script type="module" src="main.js"></script>
