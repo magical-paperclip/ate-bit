@@ -470,15 +470,21 @@ body {
 
 .ascii-art {
     font-family: 'JetBrains Mono', monospace;
-    line-height: 1;
+    white-space: pre;
+    line-height: 1.2;
+    text-align: center;
+    margin: 10px 0;
+    padding: 10px;
     color: var(--primary-color);
-    text-shadow: 0 0 10px var(--glow-color);
-    animation: ascii-glow 3s ease-in-out infinite alternate;
+    text-shadow: 0 0 5px var(--glow-color);
+    animation: ascii-glow 2s ease-in-out infinite;
+    font-weight: bold;
+    letter-spacing: 1px;
 }
 
 @keyframes ascii-glow {
-    0% { text-shadow: 0 0 5px var(--glow-color); }
-    100% { text-shadow: 0 0 15px var(--glow-color), 0 0 25px var(--glow-color); }
+    0%, 100% { text-shadow: 0 0 5px var(--glow-color); }
+    50% { text-shadow: 0 0 15px var(--glow-color), 0 0 25px var(--glow-color); }
 }
 
 

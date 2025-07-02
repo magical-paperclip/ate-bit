@@ -5,8 +5,9 @@
   "outputDirectory": "dist",
   "cleanUrls": true,
   "routes": [
-    { "src": "/assets/(.*)", "headers": { "cache-control": "public, max-age=31536000, immutable" }, "continue": true },
-    { "handle": "filesystem" },
+    { "src": "^/assets/(.*)$", "dest": "/assets/$1" },
+    { "src": "^/style\\.css$", "dest": "/style.css" },
+    { "src": "^/main\\.js$", "dest": "/main.js" },
     { "src": "/(.*)", "dest": "/index.html" }
   ]
 } 
