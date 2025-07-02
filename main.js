@@ -116,6 +116,8 @@ export class Term {
             this.addLine('')
             this.hi()
         }
+        // ensure input stays focused after each step
+        setTimeout(() => this.i.focus(), 0)
     }
     
     setupStuff() {
@@ -152,6 +154,9 @@ export class Term {
         
         this.initTheme()
         this.updateCursorPosition()
+        
+       
+        setTimeout(() => this.i.focus(), 0)
     }
     
     trackKonamiCode(e) {
@@ -397,12 +402,12 @@ export class Term {
         else if(cmd === 'fortune') {
             const fortunes = [
                 `${this.me?.name || 'u'} gonna have a good time coding today`,
-                'ur terminal brings all the bytes to the yard',
+                'your terminal brings all the bytes to the yard',
                 'snake high score incoming...',
-                'u were born to code',
+                'you were born to hack',
                 `${this.me?.name || 'u'} + keyboard = magic`,
                 'today feels like a 1337 day',
-                'ur code is poetry in motion'
+                'your deployment will fail'
             ]
             const randomFortune = fortunes[Math.floor(Math.random() * fortunes.length)]
             this.addLine(randomFortune, 'yellow')
@@ -893,7 +898,7 @@ export class Term {
     }
 }
 
-// Initialize the terminal
+// initialize the terminal when the DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    window.terminal = new Term()
-})
+    window.terminal = new Term();
+});
