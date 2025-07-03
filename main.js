@@ -216,6 +216,7 @@ export class Term {
             this.addLine('  snake    - Start Snake game', 'white')
             this.addLine('  hack     - Run hack simulation', 'white')
             this.addLine('  theme    - Change terminal theme', 'white')
+            this.addLine('  tater    - Chat with tater (by @jeremy46231)', 'white')
             this.addLine('')
             this.addLine('Additional commands may be available', 'gray')
         } 
@@ -235,6 +236,9 @@ export class Term {
         } else if(cmd === 'matrix') {
             this.startMatrixEffect(); 
         } 
+        else if(cmd === 'tater') {
+            this.chatWithTater(args.join(' '));
+        }
         else if(cmd === 'hack') {
             if (args.length === 0) {
                 this.addLine('usage: hack <target_name>', 'yellow');
@@ -892,6 +896,41 @@ export class Term {
             this.addLine(`wake up, ${this.me?.name || 'user'} ...`, 'green');
             this.addLine('');
         }, duration);
+    }
+
+    chatWithTater(message) {
+        if (!this.taterMessages) {
+            this.taterMessages = [{
+                role: 'system',
+                content: 'you are a cringy immature potato named tater who lives in a retro terminal. you can only output text, no html/css/js. you are a potato so you have no clue what a terminal is, it is just where you live. be creative in your output, but always unhelpful (though well-intentioned). keep responses short and fun.'
+            }];
+            this.addLine('🥔 Hi! I\'m tater, a friendly (but unhelpful) potato!', 'yellow');
+            this.addLine('Type "tater <message>" to chat with me!', 'gray');
+            return;
+        }
+
+        if (!message) {
+            this.addLine('🥔 *rolls around aimlessly*', 'yellow');
+            this.addLine('Type "tater <message>" to chat with me!', 'gray');
+            return;
+        }
+
+        // Add some fun potato responses
+        const responses = [
+            "omg hi! i'm just a potato, but i'll try to help! *trips and rolls away*",
+            "did someone say something? i was busy being a potato! 🥔",
+            "i would help but i'm literally just a potato lol",
+            "wow that's a great question! too bad i'm just a potato and have no idea what you're talking about!",
+            "*tries to help but just ends up making mashed potato noises*",
+            "i'd love to assist but all i know is how to be delicious!",
+            "beep boop... just kidding, i'm a potato not a robot!",
+            "that's fascinating! *continues photosynthesizing*",
+            "sounds complicated! have you tried being a potato instead?",
+            "i'm not very smart, i'm just a spud living my best life!"
+        ];
+
+        const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+        this.addLine(`🥔 ${randomResponse}`, 'yellow');
     }
 }
 
