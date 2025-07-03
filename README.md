@@ -77,5 +77,5 @@ just fork, make your changes, and submit a pr!
 
 ## license
 
-mit - do whatever you want with it 🤘
+mit
 
