@@ -196,10 +196,9 @@ export class Term {
     }
     
     runCommand(command) {
-        this.addLine(`$ ${command}`, 'user-input');
-        
-        const cmd = command.toLowerCase().trim()
-        const args = cmd.split(' ').slice(1)
+        const parts = command.toLowerCase().trim().split(' ')
+        const cmd = parts[0]
+        const args = parts.slice(1)
         
         if(cmd === 'help') {
             this.addLine('Available Commands:', 'cyan')
@@ -909,7 +908,7 @@ export class Term {
             return;
         }
 
-        if (!message) {
+        if (!message || message.trim() === '') {
             this.addLine('🥔 *rolls around aimlessly*', 'yellow');
             this.addLine('Type "tater <message>" to chat with me!', 'gray');
             return;
@@ -930,6 +929,7 @@ export class Term {
         ];
 
         const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+        this.addLine(`You: ${message}`, 'white');
         this.addLine(`🥔 ${randomResponse}`, 'yellow');
     }
 }
