@@ -898,18 +898,8 @@ export class Term {
     }
 
     chatWithTater(message) {
-        if (!this.taterMessages) {
-            this.taterMessages = [{
-                role: 'system',
-                content: 'you are a cringy immature potato named tater who lives in a retro terminal. you can only output text, no html/css/js. you are a potato so you have no clue what a terminal is, it is just where you live. be creative in your output, but always unhelpful (though well-intentioned). keep responses short and fun.'
-            }];
-            this.addLine('🥔 Hi! I\'m tater, a friendly (but unhelpful) potato!', 'yellow');
-            this.addLine('Type "tater <message>" to chat with me!', 'gray');
-            return;
-        }
-
         if (!message || message.trim() === '') {
-            this.addLine('🥔 *rolls around aimlessly*', 'yellow');
+            this.addLine('🥔 Hi! I\'m tater, a friendly (but unhelpful) potato!', 'yellow');
             this.addLine('Type "tater <message>" to chat with me!', 'gray');
             return;
         }
