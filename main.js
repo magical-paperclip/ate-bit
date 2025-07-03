@@ -485,10 +485,10 @@ export class Term {
         `)
         
         const greetings = [
-            `Welcome back, ${this.me?.name || 'guest'}`,
-            `Hello ${this.me?.name || 'guest'}, ready to begin?`,
+            `Welcome back, ${this.me?.name || 'guest'}!`,
             `Terminal session started for ${this.me?.name || 'guest'}`,
-            `${this.me?.name || 'guest'} - Terminal initialized`
+            `${this.me?.name || 'guest'} - Terminal initialized`,
+            `${this.me?.name || 'guest'}'s terminal ready`
         ]
         
         this.addLine(greetings[Math.floor(Math.random() * greetings.length)], 'cyan')
