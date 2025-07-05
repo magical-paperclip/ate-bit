@@ -1,81 +1,49 @@
 # ate-bit
 
-a retro-style terminal experience in your browser with games and a proper command system
+retro terminal thing with games
 
-## features
+## what it does
 
-- 🎮 multiple built-in games including snake
-- 💾 profile system with save/load
-- 🎨 customizable themes (try `theme` command)
-- 📝 command history with arrow keys
-- 🔍 file system simulation
-- 🌟 easter eggs (hint: try the konami code)
+- snake game
+- tetris 
+- pong
+- breakout
+- some terminal commands
+- themes
 
-## quick start
+## setup
 
 ```bash
-# install dependencies
 npm install
-
-# start dev server
 npm run dev
-
-# build for production
-npm run build
-
-# deploy to vercel
-npm run deploy
 ```
 
-## available commands
+## commands
 
-- `help` - show all available commands
-- `clear` or `cls` - clear the screen
-- `whoami` - show current user
-- `ls` or `dir` - list directory contents
-- `cat` - read file contents
-- `profile` - view or manage your profile
-- `snake` - launch snake game
-- `hack <target>` - run hack simulation
-- `theme` - change terminal theme
+- `help` - shows commands
+- `clear` - clears screen
+- `snake` - snake game
+- `tetris` - tetris game
+- `pong` - pong game
+- `breakout` - breakout game
+- `theme matrix/amber/blue/white` - change colors
+- `hack` - fake hacking thing
+- `fortune` - random quotes
 
-## game controls
+## controls
 
-### snake
-- arrow keys to move
-- esc to pause/quit
-- space to restart after game over
+snake: arrow keys or wasd, p to pause
+tetris: arrows + space for drop, c to hold
+pong: w/s for left paddle, arrows for right
+breakout: a/d or arrows, space to launch
 
-## profile management
+## tech stuff
 
-your profile and settings are saved locally. to reset:
-```bash
-profile reset
-```
+vanilla js + vite
 
-## development
+## deploy
 
-built with:
-- vanilla javascript
-- vite for bundling
-- vercel for deployment
+works on vercel or whatever
 
-## deployment
-
-the project is set up for one-click deployment to vercel. your app will be live at:
-`https://ate-bit-[username].vercel.app`
-
-## contributing
-
-feel free to:
-- add more games
-- improve terminal features
-- fix bugs
-- add new themes
-
-just fork, make your changes, and submit a pr!
-
-## license
-
-mit
+that's it
 

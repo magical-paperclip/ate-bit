@@ -22,10 +22,9 @@
         <div class="terminal-content">
             <div id="terminal-output"></div>
             <div class="terminal-input-line">
-                <span class="prompt" id="terminal-prompt">guest@ate-bit:~$ </span>
+                <span id="terminal-prompt" class="prompt">guest:~$ </span>
                 <div class="input-container">
-                    <input type="text" id="terminal-input" autocomplete="off" aria-label="Terminal input">
-                    <span class="cursor" id="cursor">_</span>
+                    <div id="terminal-input" class="input-wrapper" contenteditable="true" spellcheck="false"></div>
                 </div>
             </div>
         </div>
@@ -38,61 +37,84 @@
         </div>
         
         <div class="panel-section">
-            <h3>Quick Commands</h3>
+            <h3>Quick Access</h3>
             <div class="command-grid">
-                <div class="cmd-item" onclick="document.getElementById('terminal-input').value='games'; document.getElementById('terminal-input').focus();">
-                    <code>games</code><br>
-                    <span>play retro games</span>
+                <div class="cmd-item" onclick="document.querySelector('#terminal-input').textContent='snake'; document.querySelector('#terminal-input').focus();">
+                    <code>snake</code>
+                    <span>classic</span>
                 </div>
-                <div class="cmd-item" onclick="document.getElementById('terminal-input').value='theme'; document.getElementById('terminal-input').focus();">
-                    <code>theme</code><br><span>change colors</span>
+                <div class="cmd-item" onclick="document.querySelector('#terminal-input').textContent='tetris'; document.querySelector('#terminal-input').focus();">
+                    <code>tetris</code>
+                    <span>puzzle</span>
                 </div>
-                <div class="cmd-item" onclick="document.getElementById('terminal-input').value='help'; document.getElementById('terminal-input').focus();">
-                    <code>help</code><br>
-                    <span>show commands</span>
+                <div class="cmd-item" onclick="document.querySelector('#terminal-input').textContent='pong'; document.querySelector('#terminal-input').focus();">
+                    <code>pong</code>
+                    <span>2-player</span>
                 </div>
-            </div>
-        </div>
-
-                <div class="panel-section">
-            <div class="theme-selector">
-                <div class="theme-preview theme-matrix" data-theme="matrix">
-                    <div class="preview-bg"></div>
-                    <div class="preview-text">$</div>
-                </div>
-                <div class="theme-preview theme-cyberpunk" data-theme="cyberpunk">
-                    <div class="preview-bg"></div>
-                    <div class="preview-text">></div>
-                </div>
-                <div class="theme-preview theme-minimalist" data-theme="minimalist">
-                    <div class="preview-bg"></div>
-                    <div class="preview-text">#</div>
-                </div>
-                <div class="theme-preview theme-neon" data-theme="neon">
-                    <div class="preview-bg"></div>
-                    <div class="preview-text">~</div>
-                </div>
-                <div class="theme-preview theme-noir" data-theme="noir">
-                    <div class="preview-bg"></div>
-                    <div class="preview-text">%</div>
+                <div class="cmd-item" onclick="document.querySelector('#terminal-input').textContent='breakout'; document.querySelector('#terminal-input').focus();">
+                    <code>breakout</code>
+                    <span>arcade</span>
                 </div>
             </div>
         </div>
 
         <div class="panel-section">
+            <h3>Theme</h3>
+            <div class="theme-selector">
+                <div class="theme-preview theme-matrix" data-theme="matrix" onclick="document.querySelector('#terminal-input').textContent='theme matrix'; document.querySelector('#terminal-input').focus();">
+                    <div class="preview-bg"></div>
+                    <div class="preview-text">$</div>
+                </div>
+                <div class="theme-preview theme-amber" data-theme="amber" onclick="document.querySelector('#terminal-input').textContent='theme amber'; document.querySelector('#terminal-input').focus();">
+                    <div class="preview-bg"></div>
+                    <div class="preview-text">></div>
+                </div>
+                <div class="theme-preview theme-blue" data-theme="blue" onclick="document.querySelector('#terminal-input').textContent='theme blue'; document.querySelector('#terminal-input').focus();">
+                    <div class="preview-bg"></div>
+                    <div class="preview-text">#</div>
+                </div>
+                <div class="theme-preview theme-white" data-theme="white" onclick="document.querySelector('#terminal-input').textContent='theme white'; document.querySelector('#terminal-input').focus();">
+                    <div class="preview-bg"></div>
+                    <div class="preview-text">~</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-section">
+            <h3>Tips</h3>
             <div class="quick-tips">
-                <p>Type <code>ls</code> for unix commands</p>
-                <p>Use <code>↑/↓</code> for command history</p>
-                <p>Press <code>Tab</code> for autocomplete</p>
-                <p>Try the <code>konami</code> code...</p>
+                <p>[UP/DOWN] Command history</p>
+                <p>[TAB] Autocomplete</p>
+                <p>[ESC] Clear input</p>
             </div>
         </div>
 
         <div class="panel-footer">
-            <p>a retro terminal experiment</p>
+            <p>retro terminal experiment</p>
         </div>
     </div>
 
-    <script type="module" src="./main.js"></script>
+    <script type="module">
+        import { Terminal } from './terminal.js';
+        
+        function initTerminal() {
+            try {
+                if (!window.terminal) {
+                    console.log('Initializing terminal...');
+                    window.terminal = new Terminal();
+                    console.log('Terminal initialized successfully');
+                }
+            } catch (error) {
+                console.error('Failed to initialize terminal:', error);
+            }
+        }
+
+        // Initialize when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initTerminal);
+        } else {
+            initTerminal();
+        }
+    </script>
 </body>
 </html> 
