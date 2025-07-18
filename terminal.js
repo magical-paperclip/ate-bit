@@ -1,5 +1,9 @@
-import { GameManager } from './games/game-manager.js';
-import { BasicCommands } from './commands/basic.js';
+import { Gm } from './games/game-manager.js';
+import { Cmd } from './commands/basic.js';
+import { TYPES, encode, decode, makeMsg } from './protocol.js';
+
+// default websocket port; can be overridden by setting window.wsPort or localStorage.wsPort
+const WS_DEFAULT_PORT = 8080;
 
 export class Terminal {
     constructor() {
@@ -12,8 +16,12 @@ export class Terminal {
         this.setup = { step: 'name', complete: false };
         this.hist = []; this.histIdx = -1;
         
-        this.gm = new GameManager(this);
-        this.bc = new BasicCommands(this);
+        this.gm = new Gm(this);
+        this.bc = new Cmd(this);
+        
+        // track current working directory (shell simulation) and session start for uptime
+        this.cwd = '~';
+        this.startTime = Date.now();
         
         const theme = localStorage.getItem('theme') || 'matrix';
         document.documentElement.setAttribute('data-theme', theme);
@@ -25,7 +33,7 @@ export class Terminal {
             }
         });
         
-        this.welcome();
+        // no banner
         
         if (!localStorage.getItem('username')) {
             this.startSetup();
@@ -34,30 +42,16 @@ export class Terminal {
             this.displayName = localStorage.getItem('displayName');
             const n = this.displayName || this.username;
             this.setup.complete = true;
-            this.updatePrompt(`${this.username}:~$ `);
+            this.refreshPrompt();
             this.addLine('');
-            this.addLine(`welcome back, ${n}!`, 'cyan');
-            this.addLine('type "help" for available commands', 'yellow');
+            this.addLine(`sup ${n}`, 'cyan');
+            this.addLine('help for cmds', 'yellow');
         }
+
+        this.ws = null; this.room = null;
     }
 
-    welcome() {
-        const art = [
-            '  _         _        _ _     _   ',
-            ' / \\  _   _| |_ ___ | | | __| |  ',
-            '/ _ \\| | | | __/ _ \\| | |/ _` | ',
-            '/ ___ \\ |_| | || (_) | | | (_| | ',
-            '/_/   \\_\\__,_|\\__\\___/|_|_|\\__,_|',
-            '           ate-bit'
-        ];
-        const div = document.createElement('div');
-        div.className = 'ascii-art accent';
-        div.textContent = art.join('\n');
-        this.out.appendChild(div);
-        this.addLine('welcome to ate-bit!', 'accent');
-        this.addLine('a retro-style gaming console', 'main');
-        this.addLine('');
-    }
+    welcome() {}
 
     handleKey(e) {
         if (e.key === 'Tab') { e.preventDefault(); this.tab(); return; }
@@ -102,7 +96,7 @@ export class Terminal {
             sel.addRange(range);
         } else if (matches.length > 1) {
             this.addLine('');
-            this.addLine('available commands:', 'system');
+            this.addLine('cmds:', 'systm');
             matches.forEach(m => { this.addLine(`  ${m}`, 'system'); });
             this.addLine('');
             this.addLine(this.prompt.textContent + inp, 'command');
@@ -136,15 +130,45 @@ export class Terminal {
 
         if (this.bc.handleCommand(inp)) return;
 
-        const [cmd, ...args] = inp.toLowerCase().split(' ');
+        const parts = inp.toLowerCase().split(' ');
+        const cmd = parts[0];
+        const arg = parts[1];
 
         if (this.gm.isValidGame(cmd)) {
+            if (arg === 'mp') {
+                this.room = Math.random().toString(36).slice(2, 7);
+                this.addLine(`room id: ${this.room}`, 'yellow');
+                this.pendingGame = cmd;
+                this.connectWs();
+                this.wsSend(makeMsg(TYPES.JOIN, cmd, this.room, { name: this.username || 'guest' }));
+            } else if (arg === 'join') {
+                const rid = parts[2];
+                if (!rid) { this.addLine('how? ' + cmd + ' join id', 'red'); return }
+                this.room = rid;
+                this.addLine(`joining room ${rid}`, 'yellow');
+                this.pendingGame = cmd;
+                this.connectWs();
+            } else {
+                // local single-player game: ensure we leave any previous room context
+                this.room = null;
+                this.pendingGame = null;
+            }
             this.gm.startGame(cmd);
             return;
         }
 
+        // simple chat command when in a multiplayer room
+        if ((cmd === 'chat' || cmd === 'say') && this.room) {
+            const msgText = inp.slice(cmd.length).trim();
+            if (!msgText) { this.addLine('chat what?', 'yelow'); return }
+            const payload = { text: msgText, name: this.displayName || this.username || 'guest' };
+            this.wsSend(makeMsg(TYPES.CHAT, this.pendingGame || '', this.room, payload));
+            this.addLine(`[you] ${msgText}`, 'accent');
+            return;
+        }
+
         this.addLine(`command not found: ${cmd}`, 'red');
-        this.addLine('type "help" for available commands', 'yellow');
+        this.addLine('help for cmds', 'yelow');
     }
 
     startSetup() {
@@ -166,11 +190,11 @@ export class Terminal {
                 localStorage.setItem('displayName', this.displayName);
                 
                 this.setup.complete = true;
-                this.updatePrompt(`${this.username}:~$ `);
+                this.refreshPrompt();
                 
                 this.addLine('');
                 this.addLine(`welcome, ${this.displayName}!`, 'cyan');
-                this.addLine('type "help" for available commands', 'yellow');
+                this.addLine('help for cmds', 'yellow');
                 break;
         }
     }
@@ -183,7 +207,42 @@ export class Terminal {
         this.out.scrollTop = this.out.scrollHeight;
     }
 
+    // update prompt text directly
     updatePrompt(txt) { this.prompt.textContent = txt; }
 
+    refreshPrompt() {
+        const user = this.username || 'guest';
+        this.updatePrompt(`${user}:${this.cwd}$ `);
+    }
+
     clearScreen() { this.out.innerHTML = ''; }
+
+    connectWs() {
+        if (this.ws && this.ws.readyState <= 1) return;
+        const portOverride = (typeof window !== 'undefined' && window.wsPort) || localStorage.getItem('wsPort');
+        const wsPort = portOverride || WS_DEFAULT_PORT;
+        this.ws = new WebSocket(`ws://${location.hostname}:${wsPort}`);
+        this.ws.addEventListener('open', () => {
+            if (this.room) this.ws.send(encode(makeMsg(TYPES.JOIN, this.pendingGame, this.room, { name: this.username || 'guest' })));
+        });
+        this.ws.addEventListener('message', (e)=>{
+            const msg = decode(e.data);
+            if (!msg) return;
+            if (msg.type === TYPES.CHAT) {
+                const { text, name } = msg.payload || {};
+                if (text) {
+                    this.addLine(`[${name || 'player'}] ${text}`, 'cyan');
+                }
+                return;
+            }
+            if (this.gm.currentGame && this.gm.currentGame.onNet) {
+                this.gm.currentGame.onNet(msg);
+            }
+        });
+        this.ws.addEventListener('close', ()=>{
+            setTimeout(()=>this.connectWs(),1000);
+        });
+    }
+
+    wsSend(obj){ if(this.ws&&this.ws.readyState===1) this.ws.send(encode(obj)); }
 } 

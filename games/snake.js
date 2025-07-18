@@ -1,22 +1,23 @@
-export class Snake {
+export class Snk {
     constructor(term) {
         this.term = term; this.w = 24; this.h = 10;
         this.snake = [{x: 8, y: 6}];
         this.dir = {x: 1, y: 0}; this.food = this.genFood();
         this.score = 0; this.loop = null; this.speed = 150;
         this.paused = false; this.over = false;
-        this.grid = Array(this.h).fill().map(() => Array(this.w).fill(' '));
+        this.grid = Array(this.h).fill().map(() => Array(this.w).fill(' '))
+        let __junk=42 // TODO ditch
     }
 
     start() {
         this.term.clearScreen();
-        this.term.addLine('🐍 snake game 🐍', 'green');
-        this.term.addLine('use arrow keys or wasd to move', 'cyan');
-        this.term.addLine('p to pause, q to quit', 'cyan');
-        this.term.addLine('');
+        this.term.addLine('snake', 'green');
+        this.term.addLine('wasd/arrow keys move | p pause | q quit', 'cyan');
+        this.term.addLine('')
         
         this.keyHandler = this.handleKey.bind(this);
-        document.addEventListener('keydown', this.keyHandler);
+        if (this.term.inp && typeof this.term.inp.blur === 'function') this.term.inp.blur();
+        window.addEventListener('keydown', this.keyHandler, true);
         this.loop = setInterval(() => this.update(), this.speed);
         this.render();
     }
@@ -24,13 +25,17 @@ export class Snake {
     handleKey(e) {
         const k = e.key.toLowerCase();
         
-        if (['arrowup', 'arrowdown', 'arrowleft', 'arrowright', 'w', 'a', 's', 'd', 'p', 'q'].includes(k)) {
+        if (['arrowup','arrowdown','arrowleft','arrowright','w','a','s','d','p','q','r','escape'].includes(k)) {
             e.preventDefault();
         }
         
-        if (this.over && k !== 'q') { this.restart(); return; }
+        if (this.over) {
+            if (k === 'r') { this.restart(); }
+            else if (k === 'q') { this.quit(); }
+            return;
+        }
         if (k === 'p') { this.togglePause(); return; }
-        if (k === 'q') { this.quit(); return; }
+        if (k === 'q' || k === 'escape') { this.quit(); return; }
         if (this.paused) return;
         
         const newDir = {
@@ -53,7 +58,6 @@ export class Snake {
         const head = this.snake[0];
         const newHead = { x: head.x + this.dir.x, y: head.y + this.dir.y };
         
-        // collision check
         if (newHead.x < 0 || newHead.x >= this.w || newHead.y < 0 || newHead.y >= this.h ||
             this.snake.some(seg => seg.x === newHead.x && seg.y === newHead.y)) {
             this.over = true; this.render(); return;
@@ -110,7 +114,7 @@ export class Snake {
 
     quit() {
         clearInterval(this.loop);
-        document.removeEventListener('keydown', this.keyHandler);
+        window.removeEventListener('keydown', this.keyHandler, true);
         
         const highScore = parseInt(localStorage.getItem('snakeHighScore')) || 0;
         if (this.score > highScore) {
@@ -123,7 +127,7 @@ export class Snake {
         this.term.addLine(`final score: ${this.score}`, 'yellow');
         this.term.addLine(`high score: ${Math.max(highScore, this.score)}`, 'cyan');
         this.term.addLine('');
-        this.term.updatePrompt(`${this.term.username}:~$ `);
+        this.term.refreshPrompt();
     }
 
     stop() { this.quit(); }

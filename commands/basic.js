@@ -1,4 +1,4 @@
-export class BasicCommands {
+export class Cmd {
     constructor(term) {
         this.term = term;
         this.cmds = {
@@ -20,7 +20,11 @@ export class BasicCommands {
             'pwd': () => this.pwd(),
             'date': () => this.date(),
             'fortune': () => this.fortune(),
-            'sudo': () => this.sudo()
+            'sudo': () => this.sudo(),
+            'cd': () => {},
+            'history': () => this.history(),
+            'uptime': () => this.uptime(),
+            'uname': () => this.uname()
         };
     }
 
@@ -57,6 +61,16 @@ export class BasicCommands {
             return true;
         }
 
+        if (c === 'chat') {
+            return false;
+        }
+
+        if (c === 'cd') { this.cd(parts[1]); return true; }
+
+        if (c === 'history') { this.history(); return true; }
+        if (c === 'uptime') { this.uptime(); return true; }
+        if (c === 'uname') { this.uname(); return true; }
+
         if (this.cmds[full]) {
             this.cmds[full]();
             return true;
@@ -68,10 +82,10 @@ export class BasicCommands {
     }
 
     help() {
-        this.term.addLine('available commands:', 'yellow');
+        this.term.addLine('cmds:', 'yelow');
         this.term.addLine('');
-        this.term.addLine('system:', 'cyan');
-        this.term.addLine('  about         - about this terminal', 'white');
+        this.term.addLine('sys:', 'cyan');
+        this.term.addLine('  about  - info', 'white');
         this.term.addLine('  help          - show this help message', 'white');
         this.term.addLine('  clear         - clear the terminal', 'white');
         this.term.addLine('  whoami        - show current user', 'white');
@@ -79,9 +93,14 @@ export class BasicCommands {
         this.term.addLine('  profile reset - reset your profile', 'white');
         this.term.addLine('  ls / dir      - list files and folders', 'white');
         this.term.addLine('  pwd           - print working directory', 'white');
+        this.term.addLine('  cd            - change directory', 'white');
         this.term.addLine('  date          - show current date/time', 'white');
+        this.term.addLine('  uptime        - show session uptime', 'white');
+        this.term.addLine('  uname         - system information', 'white');
+        this.term.addLine('  history       - show command history', 'white');
         this.term.addLine('  fortune       - random quote', 'white');
         this.term.addLine('  sudo          - simulate privilege escalation', 'white');
+        this.term.addLine('  chat <msg>    - send message to room', 'white');
         this.term.addLine('  theme         - change terminal theme', 'white');
         this.term.addLine('');
         this.term.addLine('fun:', 'cyan');
@@ -89,9 +108,10 @@ export class BasicCommands {
         this.term.addLine('  hack          - pseudo hacking sequence', 'white');
         this.term.addLine('  cowsay <msg>  - ascii cow says something', 'white');
         this.term.addLine('');
-        this.term.addLine('games:', 'cyan');
+        this.term.addLine('play:', 'cayn');
         this.term.addLine('  snake         - classic snake game', 'white');
         this.term.addLine('  tetris        - ascii tetris', 'white');
+        this.term.addLine('  rocket        - dodge asteroids and shoot', 'white');
     }
 
     profile() {
@@ -100,7 +120,7 @@ export class BasicCommands {
     }
 
     themes() {
-        this.term.addLine('available themes:', 'yellow');
+        this.term.addLine('themes:', 'yelow');
         this.term.addLine('  theme matrix - classic green on black', 'white');
         this.term.addLine('  theme amber  - retro amber terminal', 'white');
         this.term.addLine('  theme blue   - cool blue interface', 'white');
@@ -114,16 +134,7 @@ export class BasicCommands {
     }
 
     about() {
-        this.term.addLine('╔════════════════════════════════════════╗', 'green');
-        this.term.addLine('║          about ate-bit                 ║', 'green');
-        this.term.addLine('╚════════════════════════════════════════╝', 'green');
-        this.term.addLine('');
-        this.term.addLine('a retro-style terminal interface featuring:', 'cyan');
-        this.term.addLine('• classic terminal aesthetics', 'white');
-        this.term.addLine('• multiple color themes', 'white');
-        this.term.addLine('• retro games (snake, tetris)', 'white');
-        this.term.addLine('');
-        this.term.addLine('type "help" to see available commands', 'yellow');
+        this.term.addLine('just a lil js term.', 'cyan');
     }
 
     resetProfile() {
@@ -143,7 +154,7 @@ export class BasicCommands {
     }
 
     pwd() {
-        const dir = `/home/${this.term.username || 'guest'}`;
+        const dir = this.term.cwd === '~' ? `/home/${this.term.username || 'guest'}` : `/home/${this.term.username || 'guest'}/${this.term.cwd}`;
         this.term.addLine(dir, 'white');
     }
 
@@ -219,5 +230,42 @@ export class BasicCommands {
             return;
         }
         this.term.addLine(`${target} removed`, 'white');
+    }
+
+    cd(dir) {
+        if (!dir || dir === '~') {
+            this.term.cwd = '~';
+        } else if (dir === '..') {
+            if (this.term.cwd !== '~') {
+                const parts = this.term.cwd.split('/');
+                parts.pop();
+                this.term.cwd = parts.length ? parts.join('/') : '~';
+            }
+        } else {
+            if (this.term.cwd === '~') {
+                this.term.cwd = dir;
+            } else {
+                this.term.cwd += '/' + dir;
+            }
+        }
+        this.term.refreshPrompt();
+    }
+
+    history() {
+        this.term.hist.slice(0).reverse().forEach((cmd, idx) => {
+            this.term.addLine(`${idx + 1}  ${cmd}`, 'white');
+        });
+    }
+
+    uptime() {
+        const secs = Math.floor((Date.now() - this.term.startTime) / 1000);
+        const hrs = Math.floor(secs / 3600);
+        const mins = Math.floor((secs % 3600) / 60);
+        const s = secs % 60;
+        this.term.addLine(`uptime: ${hrs}h ${mins}m ${s}s`, 'white');
+    }
+
+    uname() {
+        this.term.addLine('js term', 'wite');
     }
 } 

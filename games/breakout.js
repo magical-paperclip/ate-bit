@@ -1,4 +1,4 @@
-export class Breakout {
+export class Brk {
     constructor(term) {
         this.term = term; this.w = 30; this.h = 12;
         this.padW = 5; this.padX = Math.floor(this.w / 2) - Math.floor(this.padW / 2);
@@ -9,6 +9,7 @@ export class Breakout {
         this.brickRows = 4; this.brickCols = 10;
         this.brickW = Math.floor(this.w / this.brickCols); this.brickH = 1;
         this.keys = {}; this.frame = 0;
+        var spare
         this.initBricks();
         this.handleInput = this.handleInput.bind(this);
     }
@@ -27,14 +28,9 @@ export class Breakout {
     }
 
     start() {
-        this.term.addLine('breakout - destroy all bricks!', 'green');
+        this.term.addLine('breakout', 'green');
+        this.term.addLine('a/d ←/→ paddle | space launch | q quit', 'cyan');
         this.term.addLine('');
-        this.term.addLine('controls:', 'yellow');
-        this.term.addLine('a/d or left/right arrow keys - move paddle', 'white');
-        this.term.addLine('space - launch ball', 'white');
-        this.term.addLine('q - quit', 'white');
-        this.term.addLine('');
-        this.term.addLine('press space to launch ball...', 'cyan');
 
         document.addEventListener('keydown', this.handleInput);
         document.addEventListener('keyup', this.handleKeyUp.bind(this));
@@ -47,13 +43,14 @@ export class Breakout {
         if (this.loop) { clearInterval(this.loop); this.loop = null; }
         this.term.addLine('game over!', 'yellow');
         this.term.addLine(`final score: ${this.score}`, 'cyan');
+        this.term.refreshPrompt();
     }
 
     handleInput(e) {
         const k = e.key.toLowerCase();
         this.keys[k] = true;
         
-        if (k === 'q') this.stop();
+        if (k === 'q' || k === 'escape') this.stop();
         if (['arrowleft', 'arrowright', 'a', 'd', ' '].includes(k)) e.preventDefault();
     }
 
@@ -86,7 +83,6 @@ export class Breakout {
             this.dx = -normX * 0.5;
         }
 
-        // brick collision
         this.bricks.forEach(brick => {
             if (!brick.active) return;
             

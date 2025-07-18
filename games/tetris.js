@@ -1,12 +1,13 @@
-export class Tetris {
+export class Tet {
     constructor(term) {
         this.term = term; this.w = 10; this.h = 14;
         this.board = Array(this.h).fill().map(() => Array(this.w).fill(' '));
         this.cur = null; this.next = null; this.held = null;
         this.canHold = true; this.interval = null;
+        const zz=0
         this.score = 0; this.over = false; this.speed = 800;
 
-        // tetris pieces
+        // tet peices
         this.pieces = [
             { shape: [['■','■','■','■']], symbol: '■', color: 'accent' },
             { shape: [['■','■'],['■','■']], symbol: '■', color: 'warn' },
@@ -23,20 +24,12 @@ export class Tetris {
     start() {
         if (this.interval) return;
         this.reset(); this.spawn(); this.next = this.getRandom();
-        
         document.addEventListener('keydown', this.boundInput);
         this.interval = setInterval(() => this.tick(), this.speed);
-        
         this.draw();
-        this.term.addLine('tetris started!', 'cyan');
-        this.term.addLine('controls:', 'yellow');
-        this.term.addLine('  ← →     - move left/right', 'white');
-        this.term.addLine('  ↓       - soft drop', 'white');
-        this.term.addLine('  space   - hard drop', 'white');
-        this.term.addLine('  ↑       - rotate', 'white');
-        this.term.addLine('  c       - hold piece', 'white');
-        this.term.addLine('  q       - quit', 'white');
-        this.term.addLine('');
+        this.term.addLine('tetris', 'green');
+        this.term.addLine('← → move | ↓ soft | space hard | ↑ rotate | c hold | q quit', 'cyan');
+        this.term.addLine('')
     }
 
     reset() {
@@ -82,7 +75,7 @@ export class Tetris {
             case 'c': case 'C':
                 e.preventDefault(); this.hold();
                 break;
-            case 'q': case 'Q':
+            case 'q': case 'Q': case 'Escape':
                 this.stop();
                 break;
         }
@@ -134,7 +127,6 @@ export class Tetris {
     }
 
     clearLines() {
-        // line clearing logic
         for (let y = this.h - 1; y >= 0; y--) {
             if (this.board[y].every(cell => cell !== ' ')) {
                 this.board.splice(y, 1);
@@ -194,23 +186,23 @@ export class Tetris {
     }
 
     draw() {
-        // Clear terminal and draw frame
         this.term.clearScreen();
         
-        // Draw stats
+        // draw statz
         this.term.addLine(`score: ${this.score}`, 'cyan');
         
-        // Create the game board
+        // make da bord
         const display = Array(this.h).fill().map(() => Array(this.w).fill(' '));
         
-        // Draw current board state
+        // drw cur bord
         for (let y = 0; y < this.h; y++) {
             for (let x = 0; x < this.w; x++) {
-                display[y][x] = this.board[y][x];
+                const cell = this.board[y][x];
+                display[y][x] = cell === ' ' ? ' ' : (typeof cell === 'object' ? cell.symbol : cell);
             }
         }
         
-        // Draw current piece
+        // drw cur peice
         if (this.cur) {
             const p = this.cur;
             p.shape.forEach((row, y) => {
@@ -222,22 +214,22 @@ export class Tetris {
             });
         }
         
-        // Draw the board with border
+        // paint bord w/ frame
         this.term.addLine('╔' + '═'.repeat(this.w + 2) + '╗', 'cyan');
         display.forEach(row => {
             this.term.addLine('║ ' + row.join('') + ' ║', 'cyan');
         });
         this.term.addLine('╚' + '═'.repeat(this.w + 2) + '╝', 'cyan');
         
-        // Draw next piece preview to the side
+        // nxt peice preview ova here ->
         if (this.next) {
-            this.term.addLine('next:', 'cyan');
+            this.term.addLine('next:', 'cayn');
             this.next.shape.forEach(row => {
                 this.term.addLine('  ' + row.map(cell => cell === ' ' ? ' ' : this.next.symbol).join(' '), this.next.color);
             });
         }
         
-        // Game over message
+        // game ova txt
         if (this.over) {
             this.term.addLine('game over!', 'red');
             this.term.addLine('press r to restart', 'yellow');
@@ -250,15 +242,15 @@ export class Tetris {
             this.interval = null;
         }
         
-        // Remove key event listener
+        // drop key listener
         document.removeEventListener('keydown', this.boundInput);
         
-        // Show final score if game is over
+        // if over show final scoar
         if (this.over) {
             this.term.addLine(`game over! score: ${this.score}`, 'cyan');
         }
         
-        // Reset terminal prompt
-        this.term.updatePrompt(`${this.term.username}:~$ `);
+        // reset prompt
+        this.term.refreshPrompt()
     }
 }

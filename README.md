@@ -43,7 +43,7 @@ vanilla js + vite
 
 ## deploy
 
-works on vercel or whatever
+works on vercel 
 
 that's it
 

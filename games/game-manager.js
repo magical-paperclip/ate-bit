@@ -1,17 +1,20 @@
-import { Snake } from './snake.js';
-import { Tetris } from './tetris.js';
-import { Pong } from './pong.js';
-import { Breakout } from './breakout.js';
+import { Snk } from './snake.js';
+import { Tet } from './tetris.js';
+import { Png } from './pong.js';
+import { Brk } from './breakout.js';
+import { Rkt } from './rocket.js';
+import { encode, makeMsg, TYPES } from '../protocol.js'; // rel path
 
-export class GameManager {
+export class Gm {
     constructor(term) {
         this.term = term; this.currentGame = null;
         this.games = {
-            'snake': Snake,
-            'tetris': Tetris,
-            'pong': Pong,
-            'breakout': Breakout
-        };
+            'snake': Snk,
+            'tetris': Tet,
+            'pong': Png,
+            'breakout': Brk,
+            'rocket': Rkt
+        }
     }
 
     startGame(name) {
